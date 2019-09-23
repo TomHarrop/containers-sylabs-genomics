@@ -26,7 +26,7 @@ RUN apt-get update && \
 RUN add-apt-repository -y ppa:graphics-drivers/ppa && \
     apt update && \
     apt install -y \
-        nvidia-driver-430 \
+        nvidia-driver-410 \
         nvidia-cuda-toolkit
 
 WORKDIR /racon
