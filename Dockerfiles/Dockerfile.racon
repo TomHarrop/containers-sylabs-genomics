@@ -1,11 +1,7 @@
 FROM ubuntu:19.04
 
-# docker build -f Dockerfile.racon_1.4.7 -t vanessa/racon:1.4.7 .
-# docker push vanessa/racon:1.4.7
-# singularity pull docker://vanessa/racon:1.4.7
-
 LABEL SOFTWARE_NAME Racon v1.4.7
-LABEL SOFTWARE_URL https://github.com/isovic/racon
+LABEL SOFTWARE_URL https://github.com/lbcb-sci/racon
 LABEL MAINTAINER "Tom Harrop"
 LABEL VERSION "Racon v1.4.7"
 
