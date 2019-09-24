@@ -11,6 +11,8 @@ RUN apt-get update && \
         apt-transport-https \
         build-essential \
         cmake \
+        gcc-6 \
+        g++-6 \
         git \
         language-pack-en \
         lsb-release \
@@ -37,6 +39,8 @@ RUN tar -zxf racon.tar.gz \
 RUN git submodule update --init --recursive || true     # have to allow fail
 RUN mkdir build && cd build || exit 1 && \
     cmake \
+        -DCMAKE_C_COMPILER=gcc-6 \
+        -DCMAKE_CXX_COMPILER=g++-6 \
         -DCMAKE_BUILD_TYPE=Release \
         -Dracon_build_tests=ON \
         -Dracon_build_wrapper=ON \
