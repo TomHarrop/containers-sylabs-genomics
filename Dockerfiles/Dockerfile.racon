@@ -1,9 +1,9 @@
 FROM ubuntu:19.04
 
-LABEL SOFTWARE_NAME Racon v1.4.7
+LABEL SOFTWARE_NAME Racon ededb83
 LABEL SOFTWARE_URL https://github.com/lbcb-sci/racon
 LABEL MAINTAINER "Tom Harrop"
-LABEL VERSION "Racon v1.4.7"
+LABEL VERSION "Racon ededb83"
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
@@ -25,16 +25,24 @@ RUN add-apt-repository -y ppa:graphics-drivers/ppa && \
         nvidia-driver-430 \
         nvidia-cuda-toolkit
 
+# download master
+RUN git clone --recursive \
+    https://github.com/lbcb-sci/racon.git \
+    /racon
 WORKDIR /racon
-RUN wget -O "racon.tar.gz" \
-        --no-check-certificate \
-        https://github.com/lbcb-sci/racon/releases/download/1.4.7/racon-v1.4.7.tar.gz
-RUN tar -zxf racon.tar.gz \
-        --strip-components 1 && \
-    rm racon.tar.gz
+RUN git checkout ededb83
+
+# download release
+# WORKDIR /racon
+# RUN wget -O "racon.tar.gz" \
+#         --no-check-certificate \
+#         https://github.com/lbcb-sci/racon/releases/download/1.4.7/racon-v1.4.7.tar.gz
+# RUN tar -zxf racon.tar.gz \
+#         --strip-components 1 && \
+#     rm racon.tar.gz
+# RUN git submodule update --init --recursive || true     # have to allow fail
 
 # build and install with cuda support
-RUN git submodule update --init --recursive || true     # have to allow fail
 RUN mkdir build && cd build || exit 1 && \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
