@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:18.04
 
 LABEL SOFTWARE_NAME Racon v1.4.10
 LABEL SOFTWARE_URL https://github.com/lbcb-sci/racon
@@ -7,6 +7,19 @@ LABEL VERSION "Racon v1.4.10"
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C
+
+# faster apt downloads
+RUN . /etc/os-release && \
+    echo "\
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME} main restricted universe multiverse \n\
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-updates main restricted universe multiverse \n\
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-backports main restricted universe multiverse \n\
+deb mirror://mirrors.ubuntu.com/mirrors.txt ${UBUNTU_CODENAME}-security main restricted universe multiverse \n" \
+    > mirror.txt
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+        cat mirror.txt /etc/apt/sources.list.bak > /etc/apt/sources.list
+
+# dependencies
 RUN apt-get update && \
     apt-get install -y \
         apt-transport-https \
@@ -19,12 +32,12 @@ RUN apt-get update && \
         software-properties-common \
         wget
 
+# nvidia libraries
 RUN add-apt-repository -y ppa:graphics-drivers/ppa && \
     apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
-        nvidia-cuda-toolkit \
-        nvidia-driver-430
+        nvidia-cuda-toolkit 
 
 # download master
 RUN git clone \
@@ -37,9 +50,11 @@ RUN git submodule update --init --recursive || true     # have to allow fail
 # download release
 # RUN wget -O "racon.tar.gz" \
 #         --no-check-certificate \
-#         https://github.com/lbcb-sci/racon/releases/download/1.4.7/racon-v1.4.7.tar.gz
-# RUN tar -zxf racon.tar.gz \
-#         --strip-components 1 && \
+#         https://github.com/lbcb-sci/racon/releases/download/1.4.10/racon-v1.4.10.tar.gz
+# RUN mkdir /racon && \
+#     tar -zxf racon.tar.gz \
+#         --strip-components 1 \
+#         -C /racon && \
 #     rm racon.tar.gz
 # WORKDIR /racon
 
@@ -47,6 +62,7 @@ RUN git submodule update --init --recursive || true     # have to allow fail
 RUN mkdir build && cd build || exit 1 && \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_COMPILER=/usr/bin/gcc-6 \
         -Dracon_build_tests=ON \
         -Dracon_build_wrapper=ON \
         -D CUDA_TOOLKIT_ROOT_DIR=/usr/lib/cuda \
