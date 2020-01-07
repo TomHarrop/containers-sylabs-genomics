@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:19.04
 
 LABEL SOFTWARE_NAME Racon v1.4.10
 LABEL SOFTWARE_URL https://github.com/lbcb-sci/racon
@@ -62,13 +62,15 @@ RUN git submodule update --init --recursive || true     # have to allow fail
 RUN mkdir build && cd build || exit 1 && \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_COMPILER=/usr/bin/gcc-6 \
         -Dracon_build_tests=ON \
         -Dracon_build_wrapper=ON \
         -D CUDA_TOOLKIT_ROOT_DIR=/usr/lib/cuda \
         -Dracon_enable_cuda=ON \
         .. && \
     make && make install
+
+# for older versions of CUDA
+# -DCMAKE_C_COMPILER=/usr/bin/gcc-6 \
 
 ENV PATH="${PATH}:/racon/build/bin"
 ENTRYPOINT ["/racon/build/bin/racon"]
