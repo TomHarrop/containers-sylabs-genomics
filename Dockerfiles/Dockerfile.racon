@@ -6,13 +6,13 @@ LABEL MAINTAINER "Tom Harrop"
 LABEL VERSION "Racon v1.4.10"
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV LC_ALL=C
 RUN apt-get update && \
     apt-get install -y \
         apt-transport-https \
         build-essential \
         cmake \
         git \
-        language-pack-en \
         lsb-release \
         nvidia-modprobe \
         python \
@@ -20,11 +20,11 @@ RUN apt-get update && \
         wget
 
 RUN add-apt-repository -y ppa:graphics-drivers/ppa && \
-    apt update && \
-    apt install -y \
-        nvidia-cuda-toolkit
-
-#  nvidia-driver-430 \ ?
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+        nvidia-cuda-toolkit \
+        nvidia-driver-430
 
 # download master
 RUN git clone \
