@@ -27,11 +27,11 @@ RUN add-apt-repository -y ppa:graphics-drivers/ppa && \
 #  nvidia-driver-430 \ ?
 
 # download master
-RUN git clone --recursive \
+RUN git clone \
     https://github.com/lbcb-sci/racon.git \
     /racon
 WORKDIR /racon
-RUN git checkout v1.4.10
+RUN git checkout 1.4.10
 RUN git submodule update --init --recursive || true     # have to allow fail
 
 # download release
