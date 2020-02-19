@@ -112,7 +112,7 @@ RUN git checkout -f 4.3.10 && \
 # install BUSCO
 RUN /usr/bin/pip3 install biopython
 RUN git clone https://gitlab.com/ezlab/busco.git /busco
-WORKDIR busco
+WORKDIR /busco
 RUN git checkout -f  4.0.4 && \
     git submodule update --init --recursive && \
     python3 setup.py install && \
