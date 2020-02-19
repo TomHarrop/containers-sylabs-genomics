@@ -59,6 +59,8 @@ RUN git submodule update --init --recursive || true     # have to allow fail
 # WORKDIR /racon
 
 # build and install with cuda support
+# for older versions of CUDA
+# -DCMAKE_C_COMPILER=/usr/bin/gcc-6 \
 RUN mkdir build && cd build || exit 1 && \
     cmake \
         -DCMAKE_BUILD_TYPE=Release \
@@ -69,8 +71,6 @@ RUN mkdir build && cd build || exit 1 && \
         .. && \
     make && make install
 
-# for older versions of CUDA
-# -DCMAKE_C_COMPILER=/usr/bin/gcc-6 \
 
 ENV PATH="${PATH}:/racon/build/bin"
 ENTRYPOINT ["/racon/build/bin/racon"]
